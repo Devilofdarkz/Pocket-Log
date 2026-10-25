@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pocket Log - Vice City Edition</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Retro Vice City Background Grid & Sun -->
+  <div class="vc-sun"></div>
+  <div class="vc-grid"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">🌴</div>
+        <div>
+          <h1 id="t-app-title" class="neon-title">Pocket Log</h1>
+          <p class="subtitle" id="current-date-display">Date: --</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Language Switcher -->
+        <select id="lang-select" class="vc-dropdown sound-hover sound-click" title="Change Language">
+          <option value="en">English</option>
+          <option value="hi" selected>हिंदी (Hindi)</option>
+          <option value="sambalpuri">ସମ୍ବଲପୁରୀ (Sambalpuri)</option>
+          <option value="odia">ଓଡ଼ିଆ (Odia)</option>
+          <option value="telugu">తెలుగు (Telugu)</option>
+          <option value="tamil">தமிழ் (Tamil)</option>
+          <option value="marathi">मराठी (Marathi)</option>
+          <option value="bengali">বাংলা (Bengali)</option>
+        </select>
+
+        <!-- Sound Toggle -->
+        <button id="sound-toggle" class="vc-icon-btn sound-hover" title="Sound On / Off">🔊</button>
+        <!-- Export to CSV -->
+        <button id="export-btn" class="vc-btn-action sound-hover sound-click" title="Download Excel">📥 <span id="t-export">Export</span></button>
+        <!-- Reset Data -->
+        <button id="clear-all-btn" class="vc-btn-danger sound-hover sound-click" id="t-reset">Reset</button>
+      </div>
+    </header>
+
+    <!-- Summary Cards -->
+    <div class="cards-grid">
+      <div class="card balance-card sound-hover">
+        <span class="card-label" id="t-balance-label">Bacha Hua Balance</span>
+        <h2 id="total-balance">₹0.00</h2>
+        
+        <div class="budget-meter">
+          <div class="meter-labels">
+            <span id="t-expense-ratio">Kharcha Ratio</span>
+            <span id="expense-percentage">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card income-card sound-hover">
+        <span class="card-label" id="t-income-label">Kul Aamadani</span>
+        <h3 id="total-income" class="text-neon-cyan">+₹0.00</h3>
+        <small id="income-count">0 Entries</small>
+      </div>
+
+      <div class="card expense-card sound-hover">
+        <span class="card-label" id="t-expense-label">Kul Kharcha</span>
+        <h3 id="total-expense" class="text-neon-pink">-₹0.00</h3>
+        <small id="expense-count">0 Entries</small>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-layout">
+      
+      <!-- Form Section -->
+      <section class="glass-card form-section sound-hover">
+        <h3 id="t-form-heading" class="section-title">+ Naya Entry Daalein</h3>
+        <form id="transaction-form">
+          
+          <div class="form-group">
+            <label id="t-type-label">Transaction Ka Prakar</label>
+            <div class="type-selector">
+              <label class="radio-label income-radio sound-hover">
+                <input type="radio" name="entryType" value="income" checked />
+                <span id="t-type-income">+ Pesa Aaya (Income)</span>
+              </label>
+              <label class="radio-label expense-radio sound-hover">
+                <input type="radio" name="entryType" value="expense" />
+                <span id="t-type-expense">- Kharcha Hua (Expense)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount" id="t-amount-label">Rakam (Amount ₹)</label>
+            <div class="input-with-symbol">
+              <span class="currency-prefix">₹</span>
+              <input type="number" id="amount" class="sound-hover" placeholder="0.00" min="1" step="any" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="date" id="t-date-label">Taarikh (Date)</label>
+            <input type="date" id="date" class="sound-hover" required />
+          </div>
+
+          <div class="form-group">
+            <label for="note" id="t-note-label">Short Note (Kaha se aaya / Kaha gaya?)</label>
+            <input type="text" id="note" class="sound-hover" placeholder="e.g. Salary, Petrol, Chai" required />
+          </div>
+
+          <button type="submit" class="btn-vice-primary sound-hover sound-click" id="submit-btn">
+            <span id="t-save-btn">Save Karein (Add Entry)</span>
+            <span class="btn-icon">⚡</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- History Section -->
+      <section class="glass-card history-section sound-hover">
+        <div class="history-top-bar">
+          <div>
+            <h3 id="t-history-heading" class="section-title">Transactions List</h3>
+            <span id="active-filter-label" class="filter-badge">Aaj Ka Din</span>
+          </div>
+
+          <!-- Search Box -->
+          <div class="search-box">
+            <input type="text" id="search-input" class="sound-hover" placeholder="🔍 Search note or amount..." />
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-bar">
+          <select id="time-filter" class="vc-dropdown sound-hover sound-click">
+            <option value="today" id="t-opt-today" selected>📅 Aaj Ka (Daily)</option>
+            <option value="week" id="t-opt-week">📆 Iss Hafte Ka (Weekly)</option>
+            <option value="month" id="t-opt-month">🗓️ Iss Maheene Ka (Monthly)</option>
+            <option value="all" id="t-opt-all">📁 Saara Data (All Time)</option>
+          </select>
+
+          <select id="type-filter" class="vc-dropdown sound-hover sound-click">
+            <option value="all" id="t-opt-type-all" selected>Sabhi (All)</option>
+            <option value="income" id="t-opt-type-income">Sirf Aamadani (+)</option>
+            <option value="expense" id="t-opt-type-expense">Sirf Kharcha (-)</option>
+          </select>
+        </div>
+
+        <!-- Dynamic List -->
+        <div class="list-wrapper">
+          <ul id="transactions-list" class="transactions-list">
+            <!-- Dynamic items populated by script.js -->
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
